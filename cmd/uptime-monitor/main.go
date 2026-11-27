@@ -2,20 +2,25 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/Symeks/uptime-monitor/internal/checker"
 )
 
 func main() {
-	r := checker.Result{
-		URL:          "https://example.com",
-		CreatedAt:    time.Now(),
-		StatusCode:   200,
-		ResponseTime: 0,
-		Success:      true,
-		Err:          nil,
+	client := &http.Client{
+		Timeout: 10 * time.Second,
 	}
 
-	fmt.Printf("%+v\n", r)
+	urls := []string{
+		"https://example.com",
+		"https://httpbin.org/status/404",
+		"https://diese-domain-gibt-es-nicht-xyz.de",
+	}
+
+	for _, url := range urls {
+		result := checker.CheckURL(client, url)
+		fmt.Printf("%+v\n", result)
+	}
 }
