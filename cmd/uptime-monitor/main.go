@@ -17,6 +17,8 @@ func main() {
 		"https://example.com",
 		"https://httpbin.org/status/404",
 		"https://diese-domain-gibt-es-nicht-xyz.de",
+		"https://httpbin.org/status/500",
+		"http://github.com",
 	}
 
 	for _, url := range urls {

@@ -21,11 +21,10 @@ func CheckURL(client *http.Client, url string) Result {
 	}
 
 	res, err := client.Get(url)
-	rTime := time.Since(r.CreatedAt)
 
 	if err != nil {
 		r.Err = err
-		r.ResponseTime = rTime
+		r.ResponseTime = time.Since(r.CreatedAt)
 		r.Success = false
 		return r
 	}
@@ -33,8 +32,17 @@ func CheckURL(client *http.Client, url string) Result {
 	defer res.Body.Close()
 
 	r.StatusCode = res.StatusCode
-	r.ResponseTime = rTime
-	r.Success = true
+	r.ResponseTime = time.Since(r.CreatedAt)
+	r.Success = checkStatus(res.StatusCode)
 
 	return r
+}
+
+func checkStatus(statusCode int) bool {
+
+	if statusCode < 200 || statusCode >= 300 {
+		return false
+	}
+
+	return true
 }
