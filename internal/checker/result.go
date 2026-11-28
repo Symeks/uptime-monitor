@@ -39,10 +39,25 @@ func CheckURL(client *http.Client, url string) Result {
 }
 
 func checkStatus(statusCode int) bool {
-
 	if statusCode < 200 || statusCode >= 300 {
 		return false
 	}
 
 	return true
+}
+
+func CheckAll(client *http.Client, urls []string) []Result {
+	ch := make(chan Result, len(urls))
+
+	for _, url := range urls {
+		go func() {
+			ch <- CheckURL(client, url)
+		}()
+	}
+
+	results := make([]Result, len(urls))
+	for i := 0; i < len(urls); i++ {
+		results[i] = <-ch
+	}
+	return results
 }

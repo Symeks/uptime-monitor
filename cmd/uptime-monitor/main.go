@@ -19,10 +19,17 @@ func main() {
 		"https://diese-domain-gibt-es-nicht-xyz.de",
 		"https://httpbin.org/status/500",
 		"http://github.com",
+		"https://httpbin.org/delay/3",
+		"https://httpbin.org/delay/2",
 	}
 
-	for _, url := range urls {
-		result := checker.CheckURL(client, url)
+	t := time.Now()
+
+	results := checker.CheckAll(client, urls)
+
+	for _, result := range results {
 		fmt.Printf("%+v\n", result)
 	}
+
+	fmt.Printf("Total time taken: %v\n", time.Since(t))
 }
